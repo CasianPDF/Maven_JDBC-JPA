@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class DuckDB_JDBCManager implements JDBCManager {
 
-    private static Connection connection;
+    static Connection connection;
 
     @Override
     public Connection getConnection() throws SQLException {
