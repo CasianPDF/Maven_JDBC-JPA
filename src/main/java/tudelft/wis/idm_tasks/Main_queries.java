@@ -1,18 +1,23 @@
 package tudelft.wis.idm_tasks;
 
+import tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation.Player_POJO;
 import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCManager;
 import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCTask2Interface;
+import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static tudelft.wis.idm_tasks.DuckDB_JDBCManager.connection;
 
 public class Main_queries implements JDBCTask2Interface {
 
     private static Connection connection;
+    private List<Title> titles = new LinkedList<Title>() ;
     /**
      * Establishes the connection to the PostgreSQL database.
      *
@@ -21,8 +26,11 @@ public class Main_queries implements JDBCTask2Interface {
     @Override
     public Connection getConnection() throws SQLException {
         if (connection == null) {
-            Connection conn = DriverManager.getConnection("jdbc:duckdb:./DB/bggt.duckdb");
-
+            String url = "jdbc:postgresql://localhost:5432/imdb";
+            String user = "postgres";
+            String password = "12345rita";
+            Connection conn = DriverManager.getConnection(url, user, password);
+            connection = conn ;
         };
         return connection;
     }
@@ -35,7 +43,14 @@ public class Main_queries implements JDBCTask2Interface {
      */
     @Override
     public Collection<String> getTitlesPerYear(int year) {
-        return null;
+        Collection<String> result = new LinkedList<String>();
+        for (Title title : titles) {
+            if (title.getTitleYear() == year) {
+                result.add(title.getPrimaryTitle());
+            }
+            result.add("1") ;
+        }
+        return result;
     }
 
     /**
