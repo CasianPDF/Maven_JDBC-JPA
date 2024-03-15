@@ -5,9 +5,7 @@ import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCManager;
 import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCTask2Interface;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,14 +38,21 @@ public class Main_Queries implements JDBCTask2Interface {
      * @return A collection of strings of the resulting primary titles
      */
     @Override
-    public Collection<String> getTitlesPerYear(int year) {
+    public Collection<String> getTitlesPerYear(int year) throws SQLException {
         Collection<String> result = new LinkedList<String>();
-        for (Title title : titles) {
-            if (title.getTitleYear() == year) {
-                result.add(title.getPrimaryTitle());
-            }
-            result.add("1") ;
+        Connection conn = getConnection() ;
+        String query = "Select primary_title from titles where start_year = ? limit 100" ;
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setInt(1, year) ;
+        ResultSet results = preparredStatement.executeQuery() ;
+        while(results.next()){
+            result.add(results.getString("primary_title") + "\n") ;
         }
+//        for (Title title : titles) {
+//            if (title.getTitleYear() == year) {
+//                result.add(title.getPrimaryTitle());
+//            }
+//        }
         return result;
     }
 

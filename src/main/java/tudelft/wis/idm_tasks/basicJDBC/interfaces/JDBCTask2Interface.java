@@ -26,7 +26,7 @@ public interface JDBCTask2Interface {
      * @param year A specific start year to query the titles on
      * @return A collection of strings of the resulting primary titles
      */
-    public Collection<String> getTitlesPerYear(int year);
+    public Collection<String> getTitlesPerYear(int year) throws SQLException;
         // @TODO: Implement this method. Use parameterized prepared statements for the query!
 
     /**

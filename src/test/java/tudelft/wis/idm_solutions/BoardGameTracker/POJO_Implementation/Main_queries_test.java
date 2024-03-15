@@ -14,26 +14,18 @@ import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BoardGame;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.PlaySession;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * The type POJO test.
- *
- * @author Christoph Lofi, Alexandra Neagu
- */
 public class Main_queries_test {
     public Main_queries_test(){
 
     }
-    private Main_Queries dataManager = new Main_Queries();
-
-    public Main_Queries getMain_queries() {
-        return dataManager;
-    }
     @Test
-    public void basicTest() throws BgtException {
+    public void basicTest() throws BgtException, SQLException {
+        Main_Queries dataManager = new Main_Queries();
         Logger.info("THIS IS THE RESULT \n" + dataManager.getTitlesPerYear(1999)) ;
     }
 }
