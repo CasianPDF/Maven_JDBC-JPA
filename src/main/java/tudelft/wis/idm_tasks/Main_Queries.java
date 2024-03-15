@@ -1,6 +1,5 @@
 package tudelft.wis.idm_tasks;
 
-import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCManager;
 import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCTask2Interface;
 
 import java.sql.Connection;
@@ -8,9 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import static tudelft.wis.idm_tasks.DuckDB_JDBCManager.connection;
-
-public class Main_queries implements JDBCTask2Interface {
+public class Main_Queries implements JDBCTask2Interface {
 
     private static Connection connection;
     /**
