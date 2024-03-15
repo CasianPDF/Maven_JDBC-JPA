@@ -12,9 +12,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import static tudelft.wis.idm_tasks.DuckDB_JDBCManager.connection;
-
-public class Main_queries implements JDBCTask2Interface {
+public class Main_Queries implements JDBCTask2Interface {
 
     private static Connection connection;
     private List<Title> titles = new LinkedList<Title>() ;

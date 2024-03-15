@@ -6,7 +6,8 @@ package tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation;
 
 import org.junit.jupiter.api.Test;
 import org.tinylog.Logger;
-import tudelft.wis.idm_tasks.Main_queries;
+import tudelft.wis.idm_tasks.Main_Queries;
+import tudelft.wis.idm_tasks.Main_Queries;
 import tudelft.wis.idm_tasks.boardGameTracker.BgtException;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BgtDataManager;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BoardGame;
@@ -26,9 +27,9 @@ public class Main_queries_test {
     public Main_queries_test(){
 
     }
-    private Main_queries dataManager = new Main_queries();
+    private Main_Queries dataManager = new Main_Queries();
 
-    public Main_queries getMain_queries() {
+    public Main_Queries getMain_queries() {
         return dataManager;
     }
     @Test
