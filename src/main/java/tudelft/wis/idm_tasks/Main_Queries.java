@@ -20,7 +20,7 @@ public class Main_Queries implements JDBCTask2Interface {
         if (connection == null) {
             Connection conn = DriverManager.getConnection("jdbc:duckdb:./DB/bggt.duckdb");
 
-        };
+        }
         return connection;
     }
 
