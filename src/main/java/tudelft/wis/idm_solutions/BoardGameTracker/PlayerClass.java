@@ -1,37 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation;
+package tudelft.wis.idm_solutions.BoardGameTracker;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BoardGame;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
 
-/**
- * POJO (Plain Old Java Object) Implementation without any database
- * functionality.
- *
- * @author Christoph Lofi, Alexandra Neagu
- */
-public class Player_POJO implements Player {
+public class PlayerClass implements Player {
 
     private String name;
     private String nickName;
     private Collection<BoardGame> gameCollection = new LinkedList<BoardGame>();
 
     /**
-     * Instantiates a new Player POJO.
+     * new Player.
      *
      * @param name     name
      * @param nickName nickname
      */
-    public Player_POJO(String name, String nickName) {
+    public PlayerClass(String name, String nickName) {
         this.name = name;
         this.nickName = nickName;
     }
-
     @Override
     public String getPlayerName() {
         return name;
@@ -58,3 +47,5 @@ public class Player_POJO implements Player {
     }
 
 }
+
+

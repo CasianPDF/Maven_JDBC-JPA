@@ -1,6 +1,7 @@
 package tudelft.wis.idm_tasks;
 
-import tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation.Player_POJO;
+import tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation.BoardGame_POJO;
+import tudelft.wis.idm_solutions.BoardGameTracker.PlayerClass;
 import tudelft.wis.idm_tasks.boardGameTracker.BgtException;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BgtDataManager;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BoardGame;
@@ -32,6 +33,11 @@ public class Queries_BazaDeDate implements BgtDataManager {
         return connection;
     }
 
+    /**
+     * get all players in the db
+     * @return all players
+     * @throws SQLException
+     */
     public Collection<String> getAllPlayers() throws SQLException {
         Collection<String> result = new LinkedList<String>();
         Connection conn = getConnection() ;
@@ -43,27 +49,6 @@ public class Queries_BazaDeDate implements BgtDataManager {
         }
         return result;
     }
-
-    /**
-     * Creates a new player and stores it in the DB.
-     *
-     * @param name     the player name
-     * @param nickname the player nickname
-     * @return the new player
-     * @throws SQLException DB trouble
-     */
-//    @Override
-//    public Player createNewPlayer(String name, String nickname) throws BgtException, SQLException {
-//        Connection conn = getConnection() ;
-//        String query = "INSERT INTO playertable (pid, name, nickname) VALUES (?, ?, ?)" ;
-//        PreparedStatement preparredStatement = conn.prepareStatement(query);
-//        preparredStatement.setInt(1, (int) (name.length()*Math.random() * 1000)) ;
-//        preparredStatement.setString(2, name) ;
-//        preparredStatement.setString(3, nickname) ;
-//        ResultSet result = preparredStatement.executeQuery() ;
-//        return new Player_POJO(name, nickname) ;
-//    }
-
     public Player createNewPlayer(String name, String nickname) throws BgtException, SQLException {
         Connection conn = getConnection();
         String query = "INSERT INTO playertable (pid, name, nickname) VALUES (?, ?, ?)";
@@ -73,17 +58,12 @@ public class Queries_BazaDeDate implements BgtDataManager {
         preparedStatement.setString(3, nickname);
         int affectedRows = preparedStatement.executeUpdate(); // Correct method to use
 
-        // Check if the insert was successful
         if (affectedRows > 0) {
-            return new Player_POJO(name, nickname);
+            return new PlayerClass(name, nickname);
         } else {
-            // Handle the case where the player was not inserted
             throw new SQLException("Creating player failed, no rows affected.");
         }
     }
-
-
-    // documentation : POGO = Player_Old_Jdbc_Object
     /**
      * Searches for player in the database by a substring of their name.
      *
@@ -92,25 +72,49 @@ public class Queries_BazaDeDate implements BgtDataManager {
      * @throws BgtException the bgt exception
      */
     @Override
-    public Collection<Player> findPlayersByName(String name) throws BgtException {
-        return null;
+    public Collection<Player> findPlayersByName(String name) throws BgtException, SQLException {
+        Collection<Player> result = new LinkedList<Player>();
+        Connection conn = getConnection() ;
+        name = "%" + name + "%" ;
+        String query = "select name, nickname \n" +
+                "from playertable p\n" +
+                "where p.name like ?" ;
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setString(1, name);
+        ResultSet results = preparredStatement.executeQuery() ;
+        while(results.next()){
+            String nm = results.getString("name") ;
+            String nck = results.getString("nickname" );
+            result.add(new PlayerClass(nm, nck)) ;
+        }
+        return result;
     }
 
     /**
      * Creates a new board game and stores it in the DB.
-     * <p>
-     * Note: These "create" methods are somewhat unnecessary. However, I put
-     * them here to make the task test a bit easier. You can call an appropriate
-     * persist method for this.
      *
      * @param name   the name of the game
-     * @param bggURL the URL of the game at BoardGameGeek.com
+     * @param url the URL of the game at BoardGameGeek.com
      * @return the new game
      * @throws SQLException DB trouble
      */
     @Override
-    public BoardGame createNewBoardgame(String name, String bggURL) throws BgtException {
-        return null;
+    public BoardGame createNewBoardgame(String name, String url) throws BgtException, SQLException {
+        Connection conn = getConnection();
+        String query = "INSERT INTO boardgametable (bid, name, url) VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        preparedStatement.setInt(1, (int) (name.length() * Math.random() * 1000));
+        preparedStatement.setString(2, name);
+        preparedStatement.setString(3, url);
+        int affectedRows = preparedStatement.executeUpdate(); // Correct method to use
+
+        // Check if the insert was successful
+        if (affectedRows > 0) {
+            return new BoardGame_POJO(name, url) ;
+        } else {
+            // Handle the case where the player was not inserted
+            throw new SQLException("Creating boardgame failed, no rows affected.");
+        }
     }
 
     /**
@@ -121,8 +125,22 @@ public class Queries_BazaDeDate implements BgtDataManager {
      * @return collection of all boardgames containing the param substring in their names
      */
     @Override
-    public Collection<BoardGame> findGamesByName(String name) throws BgtException {
-        return null;
+    public Collection<BoardGame> findGamesByName(String name) throws BgtException, SQLException {
+        Collection<BoardGame> result = new LinkedList<BoardGame>();
+        Connection conn = getConnection() ;
+        name = "%" + name + "%" ;
+        String query = "select name, url \n" +
+                "from boardgametable b\n" +
+                "where b.name like ?" ;
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setString(1, name);
+        ResultSet results = preparredStatement.executeQuery() ;
+        while(results.next()){
+            String nm = results.getString("name") ;
+            String url = results.getString("url" );
+            result.add(new BoardGame_POJO(nm, url)) ;
+        }
+        return result;
     }
 
     /**
@@ -156,7 +174,7 @@ public class Queries_BazaDeDate implements BgtDataManager {
 
 
     /**
-     * Persists a given player to the DB. Note that this player might already eexist and only needs an updat :-)
+     * Persists a given player to the DB.
      *
      * @param player the player
      */
@@ -166,7 +184,7 @@ public class Queries_BazaDeDate implements BgtDataManager {
     }
 
     /**
-     * Persists a given session to the DB. Note that this session might already exist and only needs an update :-)
+     * Persists a given session to the DB.
      *
      * @param session the session
      */
@@ -176,12 +194,12 @@ public class Queries_BazaDeDate implements BgtDataManager {
     }
 
     /**
-     * Persists a given game to the DB. Note that this game might already exist and only needs an update :-)
+     * Persists a given game to the DB.
      *
      * @param game the game
      */
     @Override
-    public void persistBoardGame(BoardGame game) {
-
+    public void persistBoardGame(BoardGame game) throws SQLException, BgtException {
+        createNewBoardgame(game.getName(), game.getBGG_URL()) ;
     }
 }

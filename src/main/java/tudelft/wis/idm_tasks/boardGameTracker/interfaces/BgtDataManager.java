@@ -36,7 +36,7 @@ public interface BgtDataManager {
      * @return collection of all players containing the param substring in their names
      * @throws BgtException the bgt exception
      */
-    public Collection<Player> findPlayersByName(String name) throws BgtException;
+    public Collection<Player> findPlayersByName(String name) throws BgtException, SQLException;
         // @TODO: Implement this method.
 
     /**
@@ -51,7 +51,7 @@ public interface BgtDataManager {
      * @return the new game
      * @throws SQLException DB trouble
      */
-    public BoardGame createNewBoardgame(String name, String bggURL) throws BgtException;
+    public BoardGame createNewBoardgame(String name, String bggURL) throws BgtException, SQLException;
         // @TODO: Implement this method.
 
     /**
@@ -61,7 +61,7 @@ public interface BgtDataManager {
      * find "Eclipse: Second Dawn of the Galaxy""
      * @return collection of all boardgames containing the param substring in their names
      */
-    public Collection<BoardGame> findGamesByName(String name) throws BgtException;
+    public Collection<BoardGame> findGamesByName(String name) throws BgtException, SQLException;
         // @TODO: Implement this method.
 
     /**
@@ -107,7 +107,7 @@ public interface BgtDataManager {
      * Persists a given game to the DB. Note that this game might already exist and only needs an update :-)
      * @param game the game
      */
-    public void persistBoardGame(BoardGame game);
+    public void persistBoardGame(BoardGame game) throws SQLException, BgtException;
         // @TODO: Implement this method.
 
 }

@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import tudelft.wis.idm_solutions.BoardGameTracker.PlayerClass;
 import tudelft.wis.idm_tasks.boardGameTracker.BgtException;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BgtDataManager;
 import tudelft.wis.idm_tasks.boardGameTracker.interfaces.BoardGame;
@@ -22,13 +24,13 @@ import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
  */
 public class BgtDataManager_POJO implements BgtDataManager {
 
-    private List<Player_POJO> players = new LinkedList<Player_POJO>();
+    private List<PlayerClass> players = new LinkedList<PlayerClass>();
     private List<BoardGame_POJO> games = new LinkedList<BoardGame_POJO>();
     private List<PlaySession_POJO> sessions = new LinkedList<PlaySession_POJO>();
 
     @Override
     public Player createNewPlayer(String name, String nickname) throws BgtException {
-        Player_POJO player = new Player_POJO(name, nickname);
+        PlayerClass player = new PlayerClass(name, nickname);
         players.add(player);
         return player;
     }
@@ -50,7 +52,7 @@ public class BgtDataManager_POJO implements BgtDataManager {
     @Override
     public Collection<Player> findPlayersByName(String name) throws BgtException {
         Collection<Player> result = new LinkedList<Player>();
-        for (Player_POJO player : players) {
+        for (PlayerClass player : players) {
             if (player.getPlayerName().contains(name)) {
                 result.add(player);
             }

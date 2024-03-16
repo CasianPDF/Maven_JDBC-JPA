@@ -1,19 +1,14 @@
 package tudelft.wis.idm_tasks;
 
-import tudelft.wis.idm_solutions.BoardGameTracker.POJO_Implementation.Player_POJO;
-import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCManager;
 import tudelft.wis.idm_tasks.basicJDBC.interfaces.JDBCTask2Interface;
-import tudelft.wis.idm_tasks.boardGameTracker.interfaces.Player;
 
 import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Main_Queries implements JDBCTask2Interface {
 
     private static Connection connection;
-    private List<Title> titles = new LinkedList<Title>() ;
     /**
      * Establishes the connection to the PostgreSQL database.
      *
@@ -41,18 +36,13 @@ public class Main_Queries implements JDBCTask2Interface {
     public Collection<String> getTitlesPerYear(int year) throws SQLException {
         Collection<String> result = new LinkedList<String>();
         Connection conn = getConnection() ;
-        String query = "Select primary_title from titles where start_year = ? limit 100" ;
+        String query = "Select primary_title from titles where start_year = ? limit 20" ;
         PreparedStatement preparredStatement = conn.prepareStatement(query);
         preparredStatement.setInt(1, year) ;
         ResultSet results = preparredStatement.executeQuery() ;
         while(results.next()){
             result.add(results.getString("primary_title") + "\n") ;
         }
-//        for (Title title : titles) {
-//            if (title.getTitleYear() == year) {
-//                result.add(title.getPrimaryTitle());
-//            }
-//        }
         return result;
     }
 
@@ -63,8 +53,19 @@ public class Main_Queries implements JDBCTask2Interface {
      * @return A collection of strings of the resulting job categories
      */
     @Override
-    public Collection<String> getJobCategoriesFromTitles(String searchString) {
-        return null;
+    public Collection<String> getJobCategoriesFromTitles(String searchString) throws SQLException {
+        Collection<String> result = new LinkedList<String>();
+        Connection conn = getConnection() ;
+        searchString = "%" + searchString + "%" ;
+        String query = "select distinct profession from titles t join title_person_character tpc on tpc.title_id = t.title_id " +
+                "join persons_professions pp on pp.person_id = tpc.person_id where t.primary_title like ? limit 20 ";
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setString(1, searchString); ;
+        ResultSet results = preparredStatement.executeQuery() ;
+        while(results.next()){
+            result.add(results.getString("profession") + "\n") ;
+        }
+        return result;
     }
 
     /**
@@ -74,8 +75,22 @@ public class Main_Queries implements JDBCTask2Interface {
      * @return A double corresponding to the average runtime of the specified genre
      */
     @Override
-    public double getAverageRuntimeOfGenre(String genre) {
-        return 0;
+    public double getAverageRuntimeOfGenre(String genre) throws SQLException {
+        double result = -1 ;
+        Connection conn = getConnection() ;
+        String query = "select avg(t.runtime) as rez " +
+                "from titles t " +
+                "join titles_genres tg on tg.title_id = t.title_id " +
+                "where genre = ? " +
+                "group by tg.genre " +
+                "limit 20 ";
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setString(1, genre); ;
+        ResultSet results = preparredStatement.executeQuery() ;
+        results.next() ;
+        String aux = results.getString("rez") ;
+        result = Double.parseDouble(aux) ;
+        return result;
     }
 
     /**
@@ -85,7 +100,20 @@ public class Main_Queries implements JDBCTask2Interface {
      * @return A collection of strings corresponding to the character names the provided person has played
      */
     @Override
-    public Collection<String> getPlayedCharacters(String actorFullname) {
-        return null;
+    public Collection<String> getPlayedCharacters(String actorFullname) throws SQLException {
+        Collection<String> result = new LinkedList<String>();
+        Connection conn = getConnection() ;
+        String query = "select distinct character_name \n" +
+                "from persons p \n" +
+                "join title_person_character tpc on tpc.person_id = p.person_id\n" +
+                "where p.full_name = ? \n" +
+                "limit 20 ";
+        PreparedStatement preparredStatement = conn.prepareStatement(query);
+        preparredStatement.setString(1, actorFullname); ;
+        ResultSet results = preparredStatement.executeQuery() ;
+        while(results.next()){
+            result.add(results.getString("character_name") + "\n") ;
+        }
+        return result;
     }
 }
