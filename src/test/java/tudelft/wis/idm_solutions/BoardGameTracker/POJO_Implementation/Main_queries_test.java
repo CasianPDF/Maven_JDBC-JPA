@@ -20,9 +20,6 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Main_queries_test {
-    public Main_queries_test(){
-
-    }
     @Test
     public void basicTest() throws BgtException, SQLException {
         Main_Queries dataManager = new Main_Queries();
